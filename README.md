@@ -7,6 +7,7 @@ This project implements a Virtual Mouse that can be controlled using **hand gest
 
 - 🎯 Cursor movement with hand gestures
 - 🖱️ Left click using finger tap
+- 🔊 Volume control with finger distance (optional)
 - 🧠 Uses real-time webcam feed
 - ⚡ Smooth and lag-free gesture tracking
 
