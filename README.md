@@ -83,6 +83,5 @@ This layout is similar to other MediaPipe/OpenCV virtual mouse projects. [web:6]
 - Additional controls (volume, media, window management). [web:15]
 
 Feel free to edit the script name (`virtual_mouse.py`), gestures, and feature list so they perfectly match your actual implementation.
-# Virtual Mouse using Hand Gestures
 
 
