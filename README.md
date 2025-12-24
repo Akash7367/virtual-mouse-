@@ -1,163 +1,88 @@
-## virtual Mouse project 
-Virtual Mouse Control using Mediapipe, OpenCV, and Python
-This project implements a gesture-controlled virtual mouse that uses a webcam, real-time hand landmark detection, and OS-level mouse control APIs. Hand landmarks are extracted with MediaPipe Hands, processed with OpenCV and NumPy, and then mapped to screen coordinates to control the system cursor and mouse events using libraries such as PyAutoGUI.​
+# Virtual Mouse using Hand Gestures
 
-Overview
-Real-time hand landmark detection using MediaPipe’s Hands solution (21 key points per hand).​
+This project is a **virtual mouse** that lets you control the system cursor using **hand gestures** captured from your webcam. It uses **Python**, **OpenCV**, and **MediaPipe** for real‑time hand tracking, and an automation library (like PyAutoGUI) to perform mouse actions such as move, click, drag, and scroll. [web:6][web:7][web:15]
 
-Mapping fingertip positions to screen space for smooth cursor control.​
+## Features
 
-Gesture-based actions: move, left/right click, drag, scroll, and additional custom gestures.​
+- Real‑time hand tracking using MediaPipe Hands. [web:17]
+- Control mouse cursor using fingertip position.
+- Gesture‑based left click, right click, drag, and (optionally) scroll. [web:6][web:13]
+- Simple Python script that runs on a standard webcam.
+- Easily customizable gestures and sensitivity in code. [web:6]
 
-Designed as a Python script with minimal external configuration and a simple camera-based UI.​
+## Technologies Used
 
-Tech Stack
-Language: Python 3.x
+- **Python 3.x**
+- **OpenCV (`opencv-python`)** – webcam capture and image processing. [web:1]
+- **MediaPipe Hands (`mediapipe`)** – hand landmark detection (21 points). [web:17]
+- **PyAutoGUI** (or similar) – to move the cursor and perform clicks. [web:9]
+- **NumPy** – coordinate and distance calculations. [web:6]
 
-Computer Vision: OpenCV (opencv-python) for webcam capture and frame preprocessing.​
+## Installation
 
-Hand Tracking: MediaPipe Hands for robust real-time hand landmark detection.​
+1. **Clone the repository**
 
-Automation: PyAutoGUI (or equivalent) to generate mouse move, click, drag, and scroll events.​
+2. **(Optional) Create a virtual environment**
 
-Math / Utils: NumPy for coordinate normalization, distance calculations, and smoothing.​
+3. **Install dependencies**
+Make sure Python 3.7+ is installed. [web:1]
+If `requirements.txt` is not present, install manually:
 
-Installation
-Clone the repository
+## Usage
 
-bash
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
-Create and activate a virtual environment (recommended)
+1. Connect a webcam (default index is `0`). [web:7]
+2. Run the main script (update the filename if your script is different):
+3. A window will open with your webcam feed and hand landmarks drawn on it. Move your hand in front of the camera to control the cursor. [web:6]
+4. Perform the configured gestures to click, drag, or scroll.
+5. Press `q` or `Esc` in the OpenCV window to exit. [web:1][web:6]
 
-bash
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# Linux / macOS
-source .venv/bin/activate
-Install dependencies
-Ensure Python 3.7+ is installed, then:​
+## How It Works
 
-bash
-pip install -r requirements.txt
-Typical dependencies:
+1. **Capture frames** from the webcam using OpenCV. [web:1]
+2. **Detect hand landmarks** (21 points) in each frame using MediaPipe Hands. [web:17]
+3. **Map fingertip coordinates** (usually index finger tip) from camera space to screen coordinates using the screen resolution and an active interaction region. [web:6][web:13]
+4. **Recognize gestures** by checking distances and relative positions between fingers (for example thumb–index pinch for click). [web:6][web:13]
+5. **Trigger mouse events** (move, click, drag, scroll) via PyAutoGUI. [web:9]
 
-opencv-python
+## Example Gesture Mapping
 
-mediapipe
+Update this table to match your exact gestures:
 
-pyautogui (or autopy / similar)
+| Gesture                     | Description                                | Mouse Action      |
+|----------------------------|--------------------------------------------|-------------------|
+| Index finger up            | Track index fingertip                      | Move cursor       |
+| Thumb–index pinch          | Distance below a threshold                 | Left click        |
+| Index + middle finger up   | Two fingers extended                       | Right click       |
+| Pinch and move             | Hold pinch and move                        | Drag and drop     |
+| Thumb–middle pinch + move  | Thumb and middle close, vertical movement  | Scroll up / down  |
 
-numpy
+These are common patterns used in virtual mouse systems with MediaPipe. [web:6][web:13][web:15]
 
-Usage
-Connect a webcam and ensure it is accessible (usually device index 0).​
+## Configuration
 
-Run the main script:
+You can tweak several parameters inside the script:
 
-bash
-python virtual_mouse.py
-A window will open showing the webcam feed with hand landmarks and any debug overlays (bounding boxes, fingertip markers, etc.).​
+- **Camera index** (default `0`). [web:7]
+- **Frame reduction / active area** to limit the region used for cursor mapping. [web:6]
+- **Smoothing factor** for smoother cursor movement. [web:6]
+- **Click distance thresholds** for pinch detection. [web:6][web:13]
+- **Model complexity** in MediaPipe Hands for better accuracy vs speed. [web:17]
 
-Move your hand within the defined active region to control the cursor; perform configured gestures to click, drag, or scroll.​
+## Project Structure
 
-Press the configured key (e.g., q or Esc) to exit.​
+Adapt this to match your repository layout:
 
-Core Logic
-At a high level, the pipeline is:
 
-Frame acquisition
+This layout is similar to other MediaPipe/OpenCV virtual mouse projects. [web:6][web:19]
 
-Capture frames using cv2.VideoCapture(0) in a loop.​
+## Future Improvements
 
-Hand landmark detection
+- Multi‑hand support (different gestures with both hands). [web:17]
+- Better gesture recognition using a custom ML model on landmark data. [web:5]
+- On‑screen overlay UI with gesture indicators. [web:16]
+- Additional controls (volume, media, window management). [web:15]
 
-Convert BGR frames to RGB and send them to MediaPipe Hands.​
+Feel free to edit the script name (`virtual_mouse.py`), gestures, and feature list so they perfectly match your actual implementation.
+# Virtual Mouse using Hand Gestures
 
-For each detected hand, obtain 21 landmarks (x, y, z) normalized to the image.​
 
-Coordinate mapping
-
-Select relevant landmarks (e.g., index fingertip, thumb tip, middle fingertip).​
-
-Convert from image coordinates to screen coordinates using the monitor resolution and optional frame-reduction region.​
-
-Optionally apply smoothing/low-pass filtering to reduce cursor jitter.​
-
-Gesture recognition
-Typical patterns:
-
-Distance between thumb and index fingertip for click detection.​
-
-Finger state (up/down) based on landmark y-coordinates to distinguish gestures.​
-
-Multiple fingers and relative angles for advanced gestures (scroll, drag, etc.).​​
-
-Mouse event generation
-
-Use PyAutoGUI’s moveTo, click, dragTo, scroll, etc., to control the OS cursor.​
-
-Default Gestures (Example)
-Update this table to match your implementation exactly.
-
-Gesture (Hand Pose)	Detection Logic (Example)	Mouse Action
-Index finger up	Index tip tracked; other fingers down	Move cursor
-Thumb–index pinch	Distance between thumb and index below threshold	Left click
-Thumb–middle pinch + vertical	Thumb and middle close; track vertical movement	Scroll up/down
-Index + middle up	Both fingers extended; thumb and others down	Right click
-Index pinch and move	Pinch maintained while moving index in screen space	Drag and drop
-These patterns are commonly used in virtual mouse implementations based on MediaPipe.​
-
-Configuration
-Key parameters you may expose at the top of the script or via a config file:
-
-Camera index: 0 by default, change if multiple cameras exist.​
-
-Frame reduction / active area: Reduce the effective interaction region to avoid edge noise.​
-
-Smoothing factor: Controls interpolation between the current and previous cursor positions.​
-
-Click distance thresholds: Distance between landmarks to register clicks / pinch actions.​
-
-Model complexity: MediaPipe model_complexity to trade off performance vs accuracy.​
-
-Project Structure
-Adjust file names to match your repo:
-
-text
-.
-├── virtual_mouse.py          # Main application / entry point
-├── handTrack_Module.py       # (Optional) Helpers: gesture detection, smoothing, etc.
-├── volume_control.py         # control volume by hand gesture
-├── requirements.txt          # Python dependencies
-└── README.md                 # Project documentation
-This layout mirrors typical MediaPipe/OpenCV demo projects.​
-
-Limitations
-Performance depends on camera quality, lighting conditions, and CPU/GPU resources.​
-
-Some gestures may be misdetected in cluttered backgrounds or with fast motion.​
-
-Not suitable for production use without further robustness, calibration, and usability testing.​
-
-Possible Extensions
-Multi-hand control (e.g., one hand for cursor, another for shortcuts).​
-
-Custom gesture classifier using ML on landmark sequences.​
-
-On-screen UI overlay for real-time gesture feedback and mode switching.​
-
-Platform-specific integrations (e.g., shortcuts, window management, media control).​
-
-License
-Specify your license, for example:
-
-This project is licensed under the MIT License – see the LICENSE file for details.​
-
-Acknowledgements
-MediaPipe Hands for real-time hand landmark detection.​
-
-OpenCV for camera capture and image processing.​
-
-PyAutoGUI (or similar) for OS-level mouse control.
